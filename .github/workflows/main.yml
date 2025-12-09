@@ -1,0 +1,22 @@
+name: Extract Commit Data to CSV
+
+on: [push]
+
+jobs:
+  generate-csv:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Generate CSV from Commits
+        run: |
+          echo "Author,Date,Message" > commits.csv
+          git log --pretty=format:"%an,%ad,%s" --date=iso >> commits.csv
+
+      - name: Upload CSV as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: commit-data
+          path: commits.csv
